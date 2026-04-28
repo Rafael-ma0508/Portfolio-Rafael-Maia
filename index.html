@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rafael Maia — Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:ital,wght@0,300;0,400;0,500;0,600;1,300&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:       #070c15;
+      --bg2:      #0c1222;
+      --bg3:      #111827;
+      --accent:   #00d4ff;
+      --accent2:  #0055cc;
+      --text:     #dce8f5;
+      --muted:    #526070;
+      --border:   rgba(0,212,255,.18);
+      --glow:     0 0 22px rgba(0,212,255,.35);
+      --glow-sm:  0 0 10px rgba(0,212,255,.2);
+    }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body {
+      background:var(--bg);
+      color:var(--text);
+      font-family:'Exo 2', sans-serif;
+      overflow-x:hidden;
+    }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width:6px; }
+    ::-webkit-scrollbar-track { background:var(--bg); }
+    ::-webkit-scrollbar-thumb { background:var(--accent2); border-radius:3px; }
+
+    /* ── NAVBAR ── */
+    nav {
+      position:fixed; top:0; left:0; right:0; z-index:1000;
+      padding:.9rem 3rem;
+      background:rgba(7,12,21,.88);
+      backdrop-filter:blur(14px);
+      border-bottom:1px solid var(--border);
+      display:flex; justify-content:space-between; align-items:center;
+    }
+    .nav-logo {
+      font-family:'Orbitron',monospace;
+      font-size:1.1rem; font-weight:900;
+      color:var(--accent); text-decoration:none;
+      letter-spacing:3px;
+    }
+    .nav-links { display:flex; list-style:none; gap:2rem; align-items:center; }
+    .nav-links a {
+      color:var(--text); text-decoration:none;
+      font-family:'JetBrains Mono',monospace;
+      font-size:.78rem; letter-spacing:1.5px; text-transform:uppercase;
+      transition:color .25s;
+      position:relative;
+    }
+    .nav-links a::after {
+      content:''; position:absolute; bottom:-4px; left:0;
+      width:0; height:1px; background:var(--accent);
+      transition:width .3s;
+    }
+    .nav-links a:hover { color:var(--accent); }
+    .nav-links a:hover::after { width:100%; }
+    .lang-btn {
+      font-family:'JetBrains Mono',monospace; font-size:.75rem;
+      padding:.3rem .9rem;
+      border:1px solid var(--accent); color:var(--accent);
+      background:transparent; border-radius:4px;
+      text-decoration:none; transition:all .25s;
+    }
+    .lang-btn:hover { background:var(--accent); color:var(--bg); }
+
+    /* ── HERO ── */
+    #accueil {
+      position:relative; min-height:100vh;
+      display:flex; align-items:center; justify-content:center;
+      overflow:hidden;
+    }
+    #bin-canvas {
+      position:absolute; top:0; left:0; width:100%; height:100%;
+      opacity:.12; pointer-events:none;
+    }
+    .hero-overlay {
+      position:absolute; inset:0;
+      background:radial-gradient(ellipse 70% 60% at 60% 50%, rgba(0,85,204,.08) 0%, transparent 70%);
+      pointer-events:none;
+    }
+    .hero-inner {
+      position:relative; z-index:2;
+      display:flex; align-items:center; gap:5rem;
+      max-width:1100px; padding:6rem 2rem 2rem;
+      flex-wrap:wrap;
+    }
+    .hero-photo-wrap {
+      flex-shrink:0;
+      width:230px; height:230px;
+      border-radius:50%;
+      border:2px solid var(--accent);
+      box-shadow:var(--glow), inset 0 0 40px rgba(0,212,255,.04);
+      overflow:hidden;
+      animation:pulseRing 3.5s ease-in-out infinite;
+    }
+    .hero-photo-wrap img {
+      width:100%; height:100%; object-fit:cover; object-position:center top;
+      mix-blend-mode:luminosity;
+      filter:brightness(.95) contrast(1.05);
+    }
+    @keyframes pulseRing {
+      0%,100% { box-shadow:0 0 20px rgba(0,212,255,.3),0 0 60px rgba(0,212,255,.08); }
+      50%      { box-shadow:0 0 45px rgba(0,212,255,.6),0 0 90px rgba(0,212,255,.18); }
+    }
+    .hero-text { flex:1; min-width:280px; }
+    .hero-text h1 {
+      font-family:'Orbitron',monospace;
+      font-size:clamp(2.2rem,5vw,3.4rem);
+      font-weight:900; line-height:1.05;
+      margin-bottom:.6rem;
+    }
+    .hero-text h1 .accent { color:var(--accent); }
+    .hero-type {
+      font-family:'JetBrains Mono',monospace;
+      font-size:.95rem; color:var(--accent);
+      margin-bottom:1.2rem;
+      min-height:1.4em;
+    }
+    .hero-type::before { content:'> '; opacity:.6; }
+    .cursor { animation:blink .7s step-end infinite; }
+    @keyframes blink { 50% { opacity:0; } }
+    .hero-desc {
+      font-size:.95rem; color:var(--muted);
+      line-height:1.8; max-width:480px;
+      margin-bottom:1.8rem;
+    }
+    .hero-tags { display:flex; flex-wrap:wrap; gap:.6rem; margin-bottom:2rem; }
+    .tag {
+      font-family:'JetBrains Mono',monospace; font-size:.7rem;
+      padding:.28rem .8rem;
+      border:1px solid var(--border); color:var(--accent);
+      border-radius:20px; background:rgba(0,212,255,.05);
+    }
+    .hero-cta {
+      display:inline-block;
+      padding:.75rem 2.2rem;
+      background:var(--accent); color:var(--bg);
+      text-decoration:none;
+      font-family:'Orbitron',monospace; font-size:.75rem;
+      font-weight:700; letter-spacing:2.5px;
+      border-radius:4px;
+      border:1px solid var(--accent);
+      transition:all .3s;
+    }
+    .hero-cta:hover { background:transparent; color:var(--accent); box-shadow:var(--glow); }
+
+    /* ── SECTION LAYOUT ── */
+    .section-wrap { max-width:1100px; margin:0 auto; padding:6rem 2rem; }
+    .section-head { margin-bottom:3rem; }
+    .section-head h2 {
+      font-family:'Orbitron',monospace;
+      font-size:clamp(1.4rem,3vw,1.9rem); font-weight:700;
+    }
+    .section-head h2 .accent { color:var(--accent); }
+    .section-line {
+      width:50px; height:3px; margin-top:.6rem;
+      background:linear-gradient(90deg,var(--accent),transparent);
+    }
+
+    /* ── REVEAL ── */
+    .reveal {
+      opacity:0; transform:translateY(28px);
+      transition:opacity .65s ease, transform .65s ease;
+    }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+
+    /* delay helpers */
+    .d1 { transition-delay:.1s; }
+    .d2 { transition-delay:.2s; }
+    .d3 { transition-delay:.3s; }
+    .d4 { transition-delay:.4s; }
+    .d5 { transition-delay:.5s; }
+    .d6 { transition-delay:.6s; }
+    .d7 { transition-delay:.7s; }
+    .d8 { transition-delay:.8s; }
+
+    /* ── COMPÉTENCES ── */
+    .skills-grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fill, minmax(130px,1fr));
+      gap:1.2rem;
+    }
+    .skill-card {
+      background:var(--bg2);
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:1.4rem 1rem;
+      text-align:center;
+      transition:all .3s; cursor:default;
+    }
+    .skill-card:hover {
+      border-color:var(--accent);
+      box-shadow:var(--glow);
+      transform:translateY(-5px);
+    }
+    .sk-icon { font-size:2.4rem; margin-bottom:.7rem; }
+    .sk-name {
+      font-family:'JetBrains Mono',monospace;
+      font-size:.72rem; color:var(--accent);
+      font-weight:700; margin-bottom:.3rem;
+    }
+    .sk-sub { font-size:.68rem; color:var(--muted); line-height:1.4; }
+
+    /* ── PARCOURS ── */
+    .timeline { position:relative; padding:1rem 0; }
+    .timeline::before {
+      content:''; position:absolute;
+      left:50%; transform:translateX(-50%);
+      top:0; bottom:0; width:2px;
+      background:linear-gradient(to bottom, var(--accent) 0%, rgba(0,212,255,.2) 100%);
+    }
+    .tl-item {
+      display:flex;
+      padding-right:calc(50% + 2.5rem);
+      margin-bottom:2.8rem;
+      position:relative;
+    }
+    .tl-item:nth-child(even) {
+      justify-content:flex-end;
+      padding-right:0;
+      padding-left:calc(50% + 2.5rem);
+    }
+    .tl-dot {
+      position:absolute; left:50%; top:1.6rem;
+      transform:translateX(-50%);
+      width:13px; height:13px;
+      border-radius:50%;
+      background:var(--accent);
+      border:3px solid var(--bg);
+      box-shadow:var(--glow);
+      z-index:2;
+    }
+    .tl-card {
+      background:var(--bg2);
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:1.4rem 1.6rem;
+      max-width:400px; width:100%;
+      transition:all .3s;
+    }
+    .tl-card:hover { border-color:var(--accent); box-shadow:var(--glow-sm); }
+    .tl-date {
+      font-family:'JetBrains Mono',monospace;
+      font-size:.7rem; color:var(--accent);
+      opacity:.8; margin-bottom:.4rem;
+    }
+    .tl-type {
+      font-size:.65rem; font-family:'JetBrains Mono',monospace;
+      padding:.15rem .5rem; border-radius:20px;
+      margin-bottom:.6rem; display:inline-block;
+    }
+    .tl-type.edu  { background:rgba(0,212,255,.1); color:var(--accent); border:1px solid var(--border); }
+    .tl-type.work { background:rgba(0,85,204,.15); color:#7ab8ff; border:1px solid rgba(100,160,255,.2); }
+    .tl-title {
+      font-family:'Orbitron',monospace;
+      font-size:.88rem; color:var(--text);
+      margin-bottom:.25rem;
+    }
+    .tl-sub { font-size:.78rem; color:var(--muted); margin-bottom:.7rem; }
+    .tl-desc { font-size:.82rem; color:var(--muted); line-height:1.6; }
+    .tl-tags { margin-top:.8rem; display:flex; flex-wrap:wrap; gap:.4rem; }
+    .tl-tag {
+      font-family:'JetBrains Mono',monospace; font-size:.62rem;
+      padding:.18rem .55rem; border-radius:20px;
+      background:rgba(0,212,255,.07); color:var(--accent);
+      border:1px solid var(--border);
+    }
+
+    /* ── PROJETS ── */
+    .projects-grid {
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:1.4rem;
+    }
+    .proj-extra {
+      display:none;
+      grid-template-columns:repeat(3,1fr);
+      gap:1.4rem;
+      margin-top:1.4rem;
+    }
+    .proj-extra.open { display:grid; }
+    .proj-card {
+      background:var(--bg2);
+      border:1px solid var(--border);
+      border-radius:14px; overflow:hidden;
+      text-decoration:none; color:inherit;
+      display:block;
+      transition:all .3s;
+    }
+    .proj-card:hover {
+      border-color:var(--accent);
+      box-shadow:var(--glow);
+      transform:translateY(-6px);
+    }
+    .proj-img {
+      width:100%; height:175px;
+      object-fit:cover; display:block;
+      transition:transform .4s;
+    }
+    .proj-card:hover .proj-img { transform:scale(1.04); }
+    .proj-body { padding:1.2rem; }
+    .proj-num {
+      font-family:'JetBrains Mono',monospace;
+      font-size:.65rem; color:var(--accent);
+      opacity:.55; margin-bottom:.35rem;
+    }
+    .proj-title {
+      font-family:'Orbitron',monospace;
+      font-size:.8rem; color:var(--text);
+      margin-bottom:.5rem;
+    }
+    .proj-desc {
+      font-size:.78rem; color:var(--muted);
+      line-height:1.55; margin-bottom:.9rem;
+    }
+    .proj-cta {
+      font-family:'JetBrains Mono',monospace;
+      font-size:.7rem; color:var(--accent);
+    }
+    .proj-cta::after { content:' →'; }
+    .show-more {
+      display:block; margin:2rem auto 0;
+      padding:.7rem 2.5rem;
+      background:transparent;
+      border:1px solid var(--accent); color:var(--accent);
+      font-family:'Orbitron',monospace; font-size:.72rem;
+      letter-spacing:2px; border-radius:4px;
+      cursor:pointer; transition:all .3s;
+    }
+    .show-more:hover { background:var(--accent); color:var(--bg); }
+
+    /* ── CONTACT ── */
+    .contact-cards {
+      display:grid; grid-template-columns:repeat(4,1fr);
+      gap:1rem; margin-bottom:2.5rem;
+    }
+    .cc {
+      background:var(--bg2);
+      border:1px solid var(--border);
+      border-radius:14px; padding:1.6rem 1rem;
+      text-align:center; transition:all .3s;
+    }
+    .cc:hover { border-color:var(--accent); box-shadow:var(--glow-sm); }
+    .cc-icon { font-size:1.9rem; margin-bottom:.7rem; }
+    .cc-label {
+      font-family:'Orbitron',monospace; font-size:.65rem;
+      color:var(--accent); letter-spacing:1.5px;
+      text-transform:uppercase; margin-bottom:.4rem;
+    }
+    .cc-val { font-size:.78rem; color:var(--muted); }
+    .cc-val a { color:var(--accent); text-decoration:none; }
+    .contact-form {
+      background:var(--bg2);
+      border:1px solid var(--border);
+      border-radius:16px; padding:2.5rem;
+    }
+    .cf-title {
+      font-family:'Orbitron',monospace;
+      font-size:1.4rem; text-align:center;
+      margin-bottom:1.8rem;
+    }
+    .cf-title .accent { color:var(--accent); }
+    .cf-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem; }
+    .cf-input {
+      width:100%; padding:.85rem 1rem;
+      background:var(--bg3);
+      border:1px solid var(--border); border-radius:8px;
+      color:var(--text);
+      font-family:'Exo 2',sans-serif; font-size:.9rem;
+      outline:none; transition:border-color .3s;
+    }
+    .cf-input:focus { border-color:var(--accent); }
+    .cf-input::placeholder { color:var(--muted); }
+    textarea.cf-input {
+      height:140px; resize:none;
+      margin-bottom:1rem; display:block;
+    }
+    .cf-btn {
+      display:block; width:100%; padding:1rem;
+      background:var(--accent); color:var(--bg);
+      border:1px solid var(--accent);
+      font-family:'Orbitron',monospace; font-size:.78rem;
+      font-weight:700; letter-spacing:2.5px;
+      border-radius:8px; cursor:pointer; transition:all .3s;
+    }
+    .cf-btn:hover { background:transparent; color:var(--accent); box-shadow:var(--glow); }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align:center; padding:2rem;
+      border-top:1px solid var(--border);
+      font-family:'JetBrains Mono',monospace;
+      font-size:.72rem; color:var(--muted);
+    }
+    footer span { color:var(--accent); }
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:768px) {
+      nav { padding:.8rem 1.2rem; }
+      .nav-links { gap:1rem; }
+      .nav-links li:not(:last-child):not(:nth-last-child(2)) { display:none; }
+      .hero-inner { gap:2.5rem; flex-direction:column; text-align:center; padding-top:5rem; }
+      .hero-tags { justify-content:center; }
+      .timeline::before { left:1rem; }
+      .tl-item, .tl-item:nth-child(even) {
+        padding-left:3rem; padding-right:0;
+        justify-content:flex-start;
+      }
+      .tl-dot { left:1rem; }
+      .tl-card { max-width:100%; }
+      .projects-grid, .proj-extra { grid-template-columns:1fr; }
+      .contact-cards { grid-template-columns:1fr 1fr; }
+      .cf-row { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════ NAVBAR ════════════ -->
+<nav>
+  <a href="#accueil" class="nav-logo">RM_</a>
+  <ul class="nav-links">
+    <li><a href="#accueil">Accueil</a></li>
+    <li><a href="#competences">Compétences</a></li>
+    <li><a href="#parcours">Parcours</a></li>
+    <li><a href="#projets">Projets</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ════════════ HERO ════════════ -->
+<section id="accueil">
+  <canvas id="bin-canvas"></canvas>
+  <div class="hero-overlay"></div>
+  <div class="hero-inner">
+    <div class="hero-photo-wrap">
+      <img src="img/photo.jpeg" alt="Rafael Maia">
+    </div>
+    <div class="hero-text">
+      <h1>Rafael<br><span class="accent">Maia</span></h1>
+      <div class="hero-type"><span id="typed"></span><span class="cursor">|</span></div>
+      <p class="hero-desc">
+        Étudiant en BUT Réseaux &amp; Télécommunications à l'IUT Sorbonne Paris Nord,
+        passionné par la cybersécurité et les architectures réseau.
+        Actuellement en stage à la <strong style="color:var(--accent)">BNP Paribas — Levallois</strong>
+        dans le domaine de l'intelligence artificielle.
+      </p>
+      <div class="hero-tags">
+        <span class="tag">Réseaux</span>
+        <span class="tag">Cybersécurité</span>
+        <span class="tag">Linux</span>
+        <span class="tag">Python</span>
+        <span class="tag">IA / BNP Paribas</span>
+      </div>
+      <a href="#projets" class="hero-cta">Voir mes projets</a>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ COMPÉTENCES ════════════ -->
+<div id="competences" class="section-wrap">
+  <div class="section-head reveal">
+    <h2>Mes <span class="accent">Compétences</span></h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="skills-grid">
+    <div class="skill-card reveal d1">
+      <div class="sk-icon">🔐</div>
+      <div class="sk-name">Sécurité</div>
+      <div class="sk-sub">Pentest · ACL · iptables · Nessus</div>
+    </div>
+    <div class="skill-card reveal d2">
+      <div class="sk-icon">🌐</div>
+      <div class="sk-name">Réseaux</div>
+      <div class="sk-sub">VLAN · OSPF · RIP · IPv4/IPv6</div>
+    </div>
+    <div class="skill-card reveal d3">
+      <div class="sk-icon">🐧</div>
+      <div class="sk-name">Linux</div>
+      <div class="sk-sub">DHCP · DNS · FTP · SSH</div>
+    </div>
+    <div class="skill-card reveal d4">
+      <div class="sk-icon">🐍</div>
+      <div class="sk-name">Python</div>
+      <div class="sk-sub">Scripts · Automatisation</div>
+    </div>
+    <div class="skill-card reveal d5">
+      <div class="sk-icon">💻</div>
+      <div class="sk-name">HTML / CSS</div>
+      <div class="sk-sub">Web · Frontend · Design</div>
+    </div>
+    <div class="skill-card reveal d6">
+      <div class="sk-icon">🗄️</div>
+      <div class="sk-name">SQL / PHP</div>
+      <div class="sk-sub">Bases de données · Backend</div>
+    </div>
+    <div class="skill-card reveal d7">
+      <div class="sk-icon">📡</div>
+      <div class="sk-name">5G / Wifi</div>
+      <div class="sk-sub">Protocoles radio · GNSS</div>
+    </div>
+    <div class="skill-card reveal d8">
+      <div class="sk-icon">🔍</div>
+      <div class="sk-name">GNS3 / Kali</div>
+      <div class="sk-sub">Simulation · Audit · GLPI</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ PARCOURS ════════════ -->
+<div id="parcours" class="section-wrap">
+  <div class="section-head reveal">
+    <h2>Mon <span class="accent">Parcours</span></h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="timeline">
+
+    <div class="tl-item reveal d1">
+      <div class="tl-dot"></div>
+      <div class="tl-card">
+        <div class="tl-date">2024 — 2027</div>
+        <span class="tl-type edu">Formation</span>
+        <div class="tl-title">BUT Réseaux &amp; Télécommunications</div>
+        <div class="tl-sub">IUT Sorbonne Paris Nord</div>
+        <div class="tl-desc">Formation axée sur les protocoles réseau, l'architecture système et la cybersécurité. Nombreux projets pratiques en environnement réel et simulé.</div>
+        <div class="tl-tags">
+          <span class="tl-tag">Réseau</span>
+          <span class="tl-tag">Cybersécurité</span>
+          <span class="tl-tag">Linux</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item reveal d2">
+      <div class="tl-dot"></div>
+      <div class="tl-card">
+        <div class="tl-date">Avril 2025 — Stage (8-10 semaines)</div>
+        <span class="tl-type work">Expérience</span>
+        <div class="tl-title">Stage — BNP Paribas</div>
+        <div class="tl-sub">Levallois-Perret, Île-de-France</div>
+        <div class="tl-desc">Stage dans le domaine de l'intelligence artificielle appliquée aux systèmes informatiques de la banque.</div>
+        <div class="tl-tags">
+          <span class="tl-tag">IA</span>
+          <span class="tl-tag">Finance</span>
+          <span class="tl-tag">BNP Paribas</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item reveal d3">
+      <div class="tl-dot"></div>
+      <div class="tl-card">
+        <div class="tl-date">Juillet 2025 — Présent</div>
+        <span class="tl-type work">Expérience</span>
+        <div class="tl-title">Équipier Polyvalent</div>
+        <div class="tl-sub">McDonald's — Porte de Champerret</div>
+        <div class="tl-desc">Accueil et conseil client, encaissement, application rigoureuse des standards qualité et hygiène dans un environnement dynamique.</div>
+        <div class="tl-tags">
+          <span class="tl-tag">Travail en équipe</span>
+          <span class="tl-tag">Service client</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item reveal d4">
+      <div class="tl-dot"></div>
+      <div class="tl-card">
+        <div class="tl-date">2021 — 2022</div>
+        <span class="tl-type edu">Formation</span>
+        <div class="tl-title">Baccalauréat STI2D — SIN</div>
+        <div class="tl-sub">Lycée Agora, Puteaux · Mention Bien</div>
+        <div class="tl-desc">Spécialité Systèmes d'Information et Numérique, obtenu avec mention Bien.</div>
+        <div class="tl-tags">
+          <span class="tl-tag">STI2D</span>
+          <span class="tl-tag">Mention Bien</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item reveal d5">
+      <div class="tl-dot"></div>
+      <div class="tl-card">
+        <div class="tl-date">Juillet 2022 &amp; Juillet 2024</div>
+        <span class="tl-type work">Expérience</span>
+        <div class="tl-title">Ouvrier Spécialisé</div>
+        <div class="tl-sub">Groupe A2S — Absolute Services Systèmes</div>
+        <div class="tl-desc">Démontage de structures et enlèvement de câbles lors de la mise à nu d'immeubles. Travail en équipe, rigueur et respect des directives.</div>
+        <div class="tl-tags">
+          <span class="tl-tag">Terrain</span>
+          <span class="tl-tag">Rigueur</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════ PROJETS ════════════ -->
+<div id="projets" class="section-wrap">
+  <div class="section-head reveal">
+    <h2>Mes <span class="accent">Projets</span></h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="projects-grid">
+    <a href="https://ideias-maravilha-madeira-e-epoxi.netlify.app/" class="proj-card reveal d1">
+      <img src="img/logo.jpg" alt="Projet 1" class="proj-img">
+      <div class="proj-body">
+        <div class="proj-num">// PROJET 01</div>
+        <div class="proj-title">Site vitrine pour un artisan</div>
+        <div class="proj-desc">Développement et déploiement d'un site vitrine pour un artisan spécialisé en design personnalisé. Maintenance continue.</div>
+        <span class="proj-cta">Voir le projet</span>
+      </div>
+    </a>
+    <a href="doc/pro2.pdf" class="proj-card reveal d2">
+      <img src="img/pro2.png" alt="Projet 2" class="proj-img">
+      <div class="proj-body">
+        <div class="proj-num">// PROJET 02</div>
+        <div class="proj-title">JurisNova — Réseau sécurisé</div>
+        <div class="proj-desc">Segmentation en 4 VLANs, configuration de switches et routeur, ACL inter-VLAN, déploiement de services Web/BDD.</div>
+        <span class="proj-cta">Voir le projet</span>
+      </div>
+    </a>
+    <a href="doc/pro3.pdf" class="proj-card reveal d3">
+      <img src="img/pro3.png" alt="Projet 3" class="proj-img">
+      <div class="proj-body">
+        <div class="proj-num">// PROJET 03</div>
+        <div class="proj-title">Pentest &amp; Analyse de vulnérabilités</div>
+        <div class="proj-desc">Tests d'intrusion sur Kali Linux, exploitation de failles Samba/RDP, rédaction de rapports techniques avec recommandations.</div>
+        <span class="proj-cta">Voir le projet</span>
+      </div>
+    </a>
+  </div>
+
+  <div class="proj-extra" id="extra">
+    <a href="doc/pro4.pdf" class="proj-card reveal">
+      <img src="img/pro4.png" alt="Projet 4" class="proj-img">
+      <div class="proj-body">
+        <div class="proj-num">// PROJET 04</div>
+        <div class="proj-title">Sécuriser un Système d'Information</div>
+        <div class="proj-desc">Projet universitaire (SAE401-CYB) portant sur la sécurisation d'un système d'information. Mise en place et configuration de Snort (IDS), KeePass (gestion des accès), pfSense (pare-feu/VLAN) et réalisation de challenges Root-Me en injection de commande SOC Web.</div>
+        <span class="proj-cta">Voir le projet</span>
+      </div>
+    </a>
+    <a href="doc/pro5.mp4" class="proj-card reveal">
+      <img src="img/pro5.png" alt="Projet 5" class="proj-img">
+      <div class="proj-body">
+        <div class="proj-num">// PROJET 05</div>
+        <div class="proj-title">Vidéo de sensibilisation cybersécurité</div>
+        <div class="proj-desc">Réalisation d'une vidéo pédagogique sur les bonnes pratiques en cybersécurité dans le cadre d'une SAE universitaire.</div>
+        <span class="proj-cta">Voir le projet</span>
+      </div>
+    </a>
+  </div>
+
+  <button class="show-more" id="show-btn" onclick="toggleMore()">AFFICHER PLUS</button>
+</div>
+
+<!-- ════════════ CONTACT ════════════ -->
+<div id="contact" class="section-wrap">
+  <div class="section-head reveal">
+    <h2>Me <span class="accent">Contacter</span></h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="contact-cards reveal">
+    <div class="cc">
+      <div class="cc-icon">📍</div>
+      <div class="cc-label">Localisation</div>
+      <div class="cc-val">Île-de-France</div>
+    </div>
+    <div class="cc">
+      <div class="cc-icon">📞</div>
+      <div class="cc-label">Téléphone</div>
+      <div class="cc-val">06 51 61 65 36</div>
+    </div>
+    <div class="cc">
+      <div class="cc-icon">📧</div>
+      <div class="cc-label">E-Mail</div>
+      <div class="cc-val"><a href="mailto:maiarafael504@gmail.com">maiarafael504@gmail.com</a></div>
+    </div>
+    <div class="cc">
+      <div class="cc-icon">💼</div>
+      <div class="cc-label">LinkedIn</div>
+      <div class="cc-val"><a href="https://www.linkedin.com/in/rafael-maia-22a78a339" target="_blank">Rafael Maia</a></div>
+    </div>
+  </div>
+
+  <div class="contact-form reveal">
+    <div class="cf-title">Envoyer un <span class="accent">message</span></div>
+    <div class="cf-row">
+      <input id="cf-name" type="text" class="cf-input" placeholder="Votre nom">
+      <input id="cf-email" type="email" class="cf-input" placeholder="Votre adresse email">
+    </div>
+    <textarea id="cf-msg" class="cf-input" placeholder="Votre message..."></textarea>
+    <button class="cf-btn" onclick="sendMail()">ENVOYER LE MESSAGE</button>
+  </div>
+</div>
+
+<!-- ════════════ FOOTER ════════════ -->
+<footer>
+  <p>© 2025 <span>Rafael Maia</span> — Tous droits réservés &nbsp;·&nbsp; BUT R&amp;T · IUT Sorbonne Paris Nord</p>
+</footer>
+
+<script>
+/* ── Binary rain ── */
+(function(){
+  const canvas = document.getElementById('bin-canvas');
+  const ctx    = canvas.getContext('2d');
+  function resize(){ canvas.width = innerWidth; canvas.height = innerHeight; }
+  resize(); window.addEventListener('resize', resize);
+  const fs = 13; let cols, drops;
+  function init(){ cols = Math.floor(canvas.width/fs); drops = Array(cols).fill(1); }
+  init(); window.addEventListener('resize', init);
+  function draw(){
+    ctx.fillStyle = 'rgba(7,12,21,.06)';
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle = '#00d4ff';
+    ctx.font = fs+'px "JetBrains Mono",monospace';
+    drops.forEach((y,i)=>{
+      ctx.fillText(Math.random()>.5?'1':'0', i*fs, y*fs);
+      if(y*fs > canvas.height && Math.random()>.975) drops[i]=0;
+      drops[i]++;
+    });
+  }
+  setInterval(draw, 55);
+})();
+
+/* ── Typing effect ── */
+(function(){
+  const msgs = [
+    'Étudiant en BUT R&T',
+    'Passionné de Cybersécurité',
+    'Stage IA @ BNP Paribas'
+  ];
+  let mi=0, ci=0, del=false;
+  const el = document.getElementById('typed');
+  function tick(){
+    const m = msgs[mi];
+    el.textContent = del ? m.slice(0,ci--) : m.slice(0,ci++);
+    if(!del && ci===m.length+1){ del=true; setTimeout(tick,1600); return; }
+    if(del && ci<0){ del=false; mi=(mi+1)%msgs.length; }
+    setTimeout(tick, del?45:80);
+  }
+  tick();
+})();
+
+/* ── Scroll reveal ── */
+(function(){
+  const obs = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+  }, {threshold:.12});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+})();
+
+/* ── Show more projects ── */
+function toggleMore(){
+  const extra = document.getElementById('extra');
+  const btn   = document.getElementById('show-btn');
+  extra.classList.toggle('open');
+  btn.textContent = extra.classList.contains('open') ? 'AFFICHER MOINS' : 'AFFICHER PLUS';
+  if(extra.classList.contains('open')){
+    extra.querySelectorAll('.reveal').forEach(el=>setTimeout(()=>el.classList.add('visible'),50));
+  }
+}
+
+/* ── Contact form ── */
+function sendMail(){
+  const name = document.getElementById('cf-name').value.trim();
+  const email= document.getElementById('cf-email').value.trim();
+  const msg  = document.getElementById('cf-msg').value.trim();
+  if(!name||!email||!msg){ alert('Merci de remplir tous les champs.'); return; }
+  const subject = encodeURIComponent('Portfolio — Message de '+name);
+  const body    = encodeURIComponent(msg+'\n\nEnvoyé par : '+name+' ('+email+')');
+  window.location.href = 'mailto:maiarafael504@gmail.com?subject='+subject+'&body='+body;
+}
+</script>
+</body>
+</html>
